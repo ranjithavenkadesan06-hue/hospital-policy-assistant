@@ -1,0 +1,1 @@
+print("Hospital Policy Assistant Started")
