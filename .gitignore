@@ -1,28 +1,27 @@
-# Python
-__pycache__/
-*.pyc
-*.pyo
-*.pyd
-
-# Virtual environment
-venv/
-env/
-
-# Vector DB storage
-db/
-chromadb/
-*.sqlite3
-
-# Environment variables
+=========================
 .env
 
-# IDE
+# =========================
+# IDE files
+# =========================
 .vscode/
 .idea/
 
+# =========================
 # OS files
+# =========================
 .DS_Store
 Thumbs.db
 
-# Logs
-*.log
+# =========================
+# Streamlit cache
+# =========================
+.streamlit/
+
+# =========================
+# Vector DB / embeddings (VERY IMPORTANT)
+# =========================
+db/
+chroma/
+chroma_db/
+*.sqlite3

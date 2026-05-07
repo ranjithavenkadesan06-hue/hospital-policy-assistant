@@ -1,15 +1,17 @@
 import os
+from dotenv import load_dotenv
 from langchain_google_genai import ChatGoogleGenerativeAI
+
+load_dotenv()
+
+API_KEY = os.getenv("GOOGLE_API_KEY")
 
 def ask_question(vectorstore, question):
 
-    if vectorstore is None:
-        return "Vector database not initialized"
-
     docs = vectorstore.similarity_search(question, k=3)
 
-    if docs is None or len(docs) == 0:
-        return "No relevant information found"
+    if not docs:
+        return "Not found in hospital policy.", ""
 
     context = "\n\n".join([d.page_content for d in docs])
 
@@ -20,7 +22,9 @@ def ask_question(vectorstore, question):
     )
 
     prompt = f"""
-You are a hospital policy assistant.
+You are a hospital assistant.
+
+Answer using context.
 
 Context:
 {context}
@@ -28,9 +32,12 @@ Context:
 Question:
 {question}
 
-Answer briefly:
+Answer:
 """
 
     response = llm.invoke(prompt)
 
-    return response.content
+    # clean citations
+    citations = " || ".join([d.page_content[:120] for d in docs])
+
+    return response.content, citations
