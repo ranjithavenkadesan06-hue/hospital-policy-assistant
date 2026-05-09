@@ -28,15 +28,13 @@ async def upload_file(file: UploadFile = File(...)):
 
     return "Upload successful"
 
-
 @app.get("/query")
 def query(q: str):
 
     global db
 
-    if db is None:
-        return "Please upload document first <<<>>>"
-
     answer, citations = ask_question(db, q)
 
-    return f"{answer}<<<>>>{citations}"
+    citation_text = "|||".join(citations)
+
+    return f"{answer}<<<>>>{citation_text}"
