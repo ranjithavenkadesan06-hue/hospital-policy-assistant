@@ -73,12 +73,21 @@ Answer:
     # Clean citations
     citations = []
 
+    # Professional citations
+    citations = []
+
     for d in filtered_docs[:1]:
 
-        cleaned = clean_text(d.page_content)
+       source = os.path.basename(
+        d.metadata.get("source", "Unknown")
+    )
 
-        citations.append(
-            cleaned[:150] + "..."
-        )
+    page = d.metadata.get("page", None)
 
-    return answer, citations
+    excerpt = clean_text(d.page_content)[:150] + "..."
+
+    citations.append({
+        "source": source,
+        "page": page,
+        "excerpt": excerpt
+    })

@@ -35,6 +35,7 @@ def query(q: str):
 
     answer, citations = ask_question(db, q)
 
-    citation_text = "|||".join(citations)
-
-    return f"{answer}<<<>>>{citation_text}"
+    return {
+    "answer": answer,
+    "citations": citations
+    }

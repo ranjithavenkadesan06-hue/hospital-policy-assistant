@@ -1,27 +1,23 @@
-=========================
-.env
+# Virtual environment
+venv/
 
-# =========================
-# IDE files
-# =========================
+# Python cache
+__pycache__/
+*.pyc
+
+# Environment variables
+.env
+.env.local
+
+# Vector database
+chroma_db/
+
+# Uploaded files
+uploads/
+
+# IDE
 .vscode/
 .idea/
-
-# =========================
-# OS files
-# =========================
-.DS_Store
-Thumbs.db
-
-# =========================
-# Streamlit cache
-# =========================
-.streamlit/
-
-# =========================
-# Vector DB / embeddings (VERY IMPORTANT)
-# =========================
+# Vector database
 db/
-chroma/
 chroma_db/
-*.sqlite3

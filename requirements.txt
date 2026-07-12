@@ -1,0 +1,13 @@
+fastapi
+uvicorn
+streamlit
+langchain
+langchain-community
+langchain-google-genai
+langchain-text-splitters
+chromadb
+sentence-transformers
+pypdf
+docx2txt
+python-multipart
+python-dotenv

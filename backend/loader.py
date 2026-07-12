@@ -23,4 +23,10 @@ def load_file(file_path: str):
         chunk_overlap=200
     )
 
-    return splitter.split_documents(docs)
+    split_docs = splitter.split_documents(docs)
+
+    # Print metadata for debugging
+    for doc in split_docs:
+     print(doc.metadata)
+
+    return split_docs
