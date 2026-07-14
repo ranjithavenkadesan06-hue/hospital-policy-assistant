@@ -67,30 +67,19 @@ if st.button("Get Answer"):
             with st.spinner("Generating answer..."):
 
                 response = requests.get(
-                    QUERY_URL,
-                    params={"q": question}
+                      QUERY_URL,
+                      params={"q": question}
                 )
 
-            result = response.text
+            result = response.json()
+
+            answer = result["answer"]
+            citations = result["citations"]
 
             # ====================================
             # Split answer and citations
             # ====================================
 
-            if "<<<>>>" in result:
-
-                answer, citations = result.split("<<<>>>")
-
-                if citations.strip() == "":
-                    citations = []
-
-                else:
-                    citations = citations.split("|||")
-
-            else:
-
-                answer = result
-                citations = []
 
             # ====================================
             # Display Answer
@@ -116,3 +105,18 @@ if st.button("Get Answer"):
         except Exception as e:
 
             st.error(f"Error: {e}")
+REFRESH_URL = "http://127.0.0.1:8000/refresh"
+
+st.subheader("Knowledge Base")
+
+if st.button("🔄 Refresh Knowledge Base"):
+    try:
+        response = requests.post(REFRESH_URL)
+
+        if response.status_code == 200:
+            st.success("Knowledge Base refreshed successfully ✅")
+        else:
+            st.error("Refresh failed.")
+
+    except Exception as e:
+        st.error(f"Error: {e}")

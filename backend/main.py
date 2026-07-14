@@ -4,6 +4,7 @@ import os
 from backend.loader import load_file
 from backend.vectorstore import create_vectorstore
 from backend.rag_chain import ask_question
+from backend.admin import refresh_knowledge_base
 
 app = FastAPI()
 
@@ -38,4 +39,14 @@ def query(q: str):
     return {
     "answer": answer,
     "citations": citations
+    }
+@app.post("/refresh")
+def refresh():
+
+    global db
+
+    db = refresh_knowledge_base(UPLOAD_DIR)
+
+    return {
+        "message": "Knowledge Base refreshed successfully."
     }

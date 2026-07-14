@@ -21,14 +21,11 @@ def ask_question(vectorstore, question):
     # Retrieve docs
     results = vectorstore.similarity_search_with_score(question, k=3)
 
-    filtered_docs = []
-
-    for doc, score in results:
-
-        # Less strict filtering
-        if score < 2.0:
-            filtered_docs.append(doc)
-
+    filtered_docs = vectorstore.max_marginal_relevance_search(
+    question,
+    k=3,
+    fetch_k=10
+    )
     # Fallback
     if len(filtered_docs) == 0:
         return "Information not found in hospital policy.", []
@@ -47,15 +44,14 @@ def ask_question(vectorstore, question):
 
     # Prompt
     prompt = f"""
-You are a professional Hospital Policy Assistant.
+You are an AI Hospital Policy Assistant.
 
-Instructions:
-- Answer ONLY from the provided context.
-- Keep answers concise and professional.
-- If the answer is not available in context,
-  say:
-  "Information not found in hospital policy."
-- Do not hallucinate.
+Rules:
+1. Answer ONLY using the provided context.
+2. Never use your own knowledge.
+3. If the answer is not clearly present in the context, reply exactly:
+   Information not found in hospital policy.
+4. Keep the answer concise and professional.
 
 Context:
 {context}
@@ -69,25 +65,25 @@ Answer:
     response = llm.invoke(prompt)
 
     answer = response.content.strip()
+    if "not found" in answer.lower():
+     answer = "Information not found in hospital policy."
+    print("Answer generated:", answer)
+    
 
-    # Clean citations
+    # Better citations
     citations = []
 
-    # Professional citations
-    citations = []
+    for d in filtered_docs:
 
-    for d in filtered_docs[:1]:
+      source = d.metadata.get("source", "Unknown File")
+      page = d.metadata.get("page", "-")
 
-       source = os.path.basename(
-        d.metadata.get("source", "Unknown")
-    )
+      snippet = clean_text(d.page_content)[:150]
 
-    page = d.metadata.get("page", None)
+      citations.append(
+        f"{os.path.basename(source)} | Page {page} | {snippet}..."
+      )
 
-    excerpt = clean_text(d.page_content)[:150] + "..."
-
-    citations.append({
-        "source": source,
-        "page": page,
-        "excerpt": excerpt
-    })
+    print("Citations:", citations)
+    print("Returning from ask_question()")
+    return answer, citations
